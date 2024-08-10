@@ -12,3 +12,68 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id      String   @id @default(uuid())
+  email   String   @unique
+  name    String?
+  zaps    Zap[]
+}
+
+model Zap {
+  id          String      @id @default(uuid())
+  userId      String      @unique
+  user        User        @relation(fields: [userId], references: [id])
+  trigger     Trigger?
+  actions     Action[]
+}
+
+model Trigger {
+  id                    String              @id @default(uuid())
+  availableTriggerId    String              @unique
+  type                  AvailableTrigger    @relation(fields: [availableTriggerId], references: [id])
+  zapId                 String              @unique
+  zap                   Zap                 @relation(fields: [zapId], references: [id])
+}
+
+model AvailableTrigger {
+  id          String      @id @default(uuid())
+  name        String
+  triggers    Trigger[] 
+}
+
+model Action {
+  id                    String              @id @default(uuid())
+  availableActionId     String              @unique
+  type                  AvailableAction     @relation(fields: [availableActionId], references: [id])
+  zapId                 String             
+  zap                   Zap                 @relation(fields: [zapId], references: [id])
+  order                 Int                 @default(0)
+}
+
+model AvailableAction {
+  id          String      @id @default(uuid())
+  name        String
+  actions    Action[] 
+}
+
+model ZapRun {
+  id              String          @id @default(uuid())
+  zapId           String         
+  status          ZapRunStatus
+  metadata        Json?
+  zapRunOutBox    ZapRunOutBox?
+}
+
+model ZapRunOutBox {
+  id          String      @id @default(uuid())
+  zapId       String
+  zapRunId    String      @unique
+  zapRun      ZapRun      @relation(fields: [zapRunId], references: [id])
+}
+
+enum ZapRunStatus {
+  Processing
+  Completed
+  Failed
+}
