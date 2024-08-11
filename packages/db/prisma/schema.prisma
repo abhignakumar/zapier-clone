@@ -26,6 +26,7 @@ model Zap {
   user        User        @relation(fields: [userId], references: [id])
   trigger     Trigger?
   actions     Action[]
+  zapRuns     ZapRun[]
 }
 
 model Trigger {
@@ -63,6 +64,7 @@ model ZapRun {
   status          ZapRunStatus
   metadata        Json?
   zapRunOutBox    ZapRunOutBox?
+  zap             Zap             @relation(fields: [zapId], references: [id])
 }
 
 model ZapRunOutBox {
