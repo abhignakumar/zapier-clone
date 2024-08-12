@@ -2,9 +2,13 @@
   "name": "@repo/common",
   "version": "0.0.0",
   "exports": {
-    "./lib/config": "./src/lib/config.ts"
+    "./lib/config": "./src/lib/config.ts",
+    "./types/zodTypes": "./src/types/zodTypes.ts"
   },
   "devDependencies": {
     "@repo/typescript-config": "*"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
   }
 }

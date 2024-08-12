@@ -14,10 +14,11 @@ datasource db {
 }
 
 model User {
-  id      String   @id @default(uuid())
-  email   String   @unique
-  name    String?
-  zaps    Zap[]
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  name        String?
+  zaps        Zap[]
 }
 
 model Zap {
@@ -31,7 +32,7 @@ model Zap {
 
 model Trigger {
   id                    String              @id @default(uuid())
-  availableTriggerId    String              @unique
+  availableTriggerId    String              
   type                  AvailableTrigger    @relation(fields: [availableTriggerId], references: [id])
   zapId                 String              @unique
   zap                   Zap                 @relation(fields: [zapId], references: [id])
@@ -45,7 +46,7 @@ model AvailableTrigger {
 
 model Action {
   id                    String              @id @default(uuid())
-  availableActionId     String              @unique
+  availableActionId     String              
   type                  AvailableAction     @relation(fields: [availableActionId], references: [id])
   zapId                 String             
   zap                   Zap                 @relation(fields: [zapId], references: [id])

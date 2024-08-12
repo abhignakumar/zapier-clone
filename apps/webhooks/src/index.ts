@@ -1,7 +1,7 @@
 import express from "express";
 import { PrismaClient } from "@repo/db";
 
-const PORT = 3000;
+const PORT = 3001;
 const app = express();
 const prisma = new PrismaClient();
 const WEBHOOK_TRIGGER_ID = "2e8adadc-034c-4d0c-a722-05a51e3c48f0";
