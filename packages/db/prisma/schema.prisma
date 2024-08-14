@@ -23,11 +23,12 @@ model User {
 
 model Zap {
   id          String      @id @default(uuid())
-  userId      String      @unique
+  userId      String      
   user        User        @relation(fields: [userId], references: [id])
   trigger     Trigger?
   actions     Action[]
   zapRuns     ZapRun[]
+  createdAt   DateTime    @default(now())
 }
 
 model Trigger {
@@ -36,12 +37,14 @@ model Trigger {
   type                  AvailableTrigger    @relation(fields: [availableTriggerId], references: [id])
   zapId                 String              @unique
   zap                   Zap                 @relation(fields: [zapId], references: [id])
+  metaData              Json                @default("{}")
 }
 
 model AvailableTrigger {
   id          String      @id @default(uuid())
   name        String
-  triggers    Trigger[] 
+  triggers    Trigger[]
+  image       String
 }
 
 model Action {
@@ -51,19 +54,21 @@ model Action {
   zapId                 String             
   zap                   Zap                 @relation(fields: [zapId], references: [id])
   order                 Int                 @default(0)
+  metaData              Json                @default("{}")
 }
 
 model AvailableAction {
   id          String      @id @default(uuid())
   name        String
-  actions    Action[] 
+  actions     Action[]
+  image       String
 }
 
 model ZapRun {
   id              String          @id @default(uuid())
   zapId           String         
   status          ZapRunStatus
-  metadata        Json?
+  metaData        Json            @default("{}")
   zapRunOutBox    ZapRunOutBox?
   zap             Zap             @relation(fields: [zapId], references: [id])
 }

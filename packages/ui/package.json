@@ -5,7 +5,8 @@
   "exports": {
     "./PrimaryButton": "./src/buttons/PrimaryButton.tsx",
     "./SecondaryButton": "./src/buttons/SecondaryButton.tsx",
-    "./LinkButton": "./src/buttons/LinkButton.tsx"
+    "./LinkButton": "./src/buttons/LinkButton.tsx",
+    "./LoadingSpinner": "./src/LoadingSpinner.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

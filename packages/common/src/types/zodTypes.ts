@@ -12,13 +12,15 @@ export const userLogInSchema = z.object({
 });
 
 export const createZapSchema = z.object({
-  userId: z.string(),
-  availableTriggerId: z.string(),
+  availableTriggerId: z.string().min(1),
   triggerMetadata: z.any().optional(),
   actions: z.array(
     z.object({
-      availableActionId: z.string(),
+      availableActionId: z.string().min(1),
       actionMetadata: z.any().optional(),
+      order: z.number(),
     })
   ),
 });
+
+export const updateZapSchema = createZapSchema.extend({ zapId: z.string() });

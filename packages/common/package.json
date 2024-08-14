@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "exports": {
     "./lib/config": "./src/lib/config.ts",
-    "./types/zodTypes": "./src/types/zodTypes.ts"
+    "./types/zodTypes": "./src/types/zodTypes.ts",
+    "./types/types": "./src/types/types.ts"
   },
   "devDependencies": {
     "@repo/typescript-config": "*"

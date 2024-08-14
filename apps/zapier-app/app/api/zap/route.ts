@@ -27,9 +27,9 @@ export async function POST(req: NextRequest) {
       },
       actions: {
         createMany: {
-          data: parsedData.data.actions.map((a, index) => ({
+          data: parsedData.data.actions.map((a) => ({
             availableActionId: a.availableActionId,
-            order: index,
+            order: a.order,
           })),
         },
       },
@@ -54,17 +54,19 @@ export async function GET(req: NextRequest) {
     },
     include: {
       trigger: {
-        include: {
+        select: {
           type: true,
         },
       },
       actions: {
-        include: {
+        select: {
           type: true,
         },
       },
     },
   });
+
+  console.log(zaps);
 
   return NextResponse.json(zaps);
 }

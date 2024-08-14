@@ -8,7 +8,7 @@ interface ButtonProps {
 export const LinkButton = ({ children, onClick }: ButtonProps) => {
   return (
     <button
-      className={`rounded text-slate-600 text-sm hover:bg-zinc-200 transition-all px-3 py-2`}
+      className={`rounded text-slate-600 text-sm hover:bg-[#f7efe2] transition-all px-3 py-2`}
       onClick={onClick}
     >
       {children}
