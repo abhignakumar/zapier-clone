@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../lib/auth";
 import { redirect } from "next/navigation";
-import { PrimaryButton } from "@repo/ui/PrimaryButton";
 import { CreateZap } from "../components/CreateZap";
 import { ZapsTable } from "../components/ZapsTable";
 

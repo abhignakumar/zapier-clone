@@ -6,7 +6,8 @@
     "./PrimaryButton": "./src/buttons/PrimaryButton.tsx",
     "./SecondaryButton": "./src/buttons/SecondaryButton.tsx",
     "./LinkButton": "./src/buttons/LinkButton.tsx",
-    "./LoadingSpinner": "./src/LoadingSpinner.tsx"
+    "./LoadingSpinner": "./src/LoadingSpinner.tsx",
+    "./InputBox": "./src/InputBox.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

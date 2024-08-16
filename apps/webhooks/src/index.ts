@@ -1,10 +1,10 @@
 import express from "express";
 import { PrismaClient } from "@repo/db";
+import { TRIGGER_WEBHOOK_ID, WEBHOOK_URL } from "@repo/common/lib/config";
 
-const PORT = 3001;
+const PORT = parseInt(WEBHOOK_URL.substring(WEBHOOK_URL.length - 4));
 const app = express();
 const prisma = new PrismaClient();
-const WEBHOOK_TRIGGER_ID = "2e8adadc-034c-4d0c-a722-05a51e3c48f0";
 
 app.use(express.json());
 
@@ -33,7 +33,7 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
 
   if (!zap) return res.json({ msg: "Zap not found." });
 
-  if (zap.trigger?.availableTriggerId !== WEBHOOK_TRIGGER_ID)
+  if (zap.trigger?.availableTriggerId !== TRIGGER_WEBHOOK_ID)
     return res.json({ msg: "Trigger is not a webhook for this zap." });
 
   // Update database
@@ -42,7 +42,7 @@ app.post("/hooks/catch/:userId/:zapId", async (req, res) => {
       data: {
         zapId: zapId,
         status: "Processing",
-        metadata: metadata,
+        metaData: metadata,
       },
     });
     await tx.zapRunOutBox.create({

@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
       trigger: {
         create: {
           availableTriggerId: parsedData.data.availableTriggerId,
+          metaData: parsedData.data.triggerMetadata,
         },
       },
       actions: {
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
           data: parsedData.data.actions.map((a) => ({
             availableActionId: a.availableActionId,
             order: a.order,
+            metaData: a.actionMetadata,
           })),
         },
       },
@@ -65,8 +67,6 @@ export async function GET(req: NextRequest) {
       },
     },
   });
-
-  console.log(zaps);
 
   return NextResponse.json(zaps);
 }

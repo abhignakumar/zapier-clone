@@ -10,6 +10,8 @@ import { Modal } from "./Modal";
 import { createZapSchema, updateZapSchema } from "@repo/common/types/zodTypes";
 import { useParams, useRouter } from "next/navigation";
 import { LoadingSpinner } from "@repo/ui/LoadingSpinner";
+import { SideBar } from "./SideBar";
+import { LogoNamePGCell } from "./LogoNamePGCell";
 
 export const ZapPlayground = ({
   trigger,
@@ -34,6 +36,8 @@ export const ZapPlayground = ({
   const [actionIndex, setActionIndex] = useState<number>(0);
   const [type, setType] = useState<"trigger" | "action">("trigger");
   const [loading, setLoading] = useState(true);
+  const [openSideBar, setOpenSideBar] = useState(false);
+  const [selectedAvailableTA, setSelectedAvailableTA] = useState<AvailableTA>();
   const router = useRouter();
   const { zapId } = useParams();
 
@@ -117,94 +121,145 @@ export const ZapPlayground = ({
     </div>
   ) : (
     <div className="p-5 min-h-screen w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-      <div className="flex justify-end py-4 px-3">
-        <PrimaryButton variant="purple" onClick={handlePublishOnClick}>
-          Publish
-        </PrimaryButton>
-      </div>
+      <div className="flex min-h-screen">
+        <div className="w-full">
+          <div className="flex justify-end py-4 px-3">
+            <PrimaryButton variant="purple" onClick={handlePublishOnClick}>
+              Publish
+            </PrimaryButton>
+          </div>
 
-      <div className="flex justify-center py-4 px-3">
-        <PGCell
-          onClick={() => {
-            setOpenModal(true);
-            setType("trigger");
-          }}
-          closeable={false}
-        >
-          {triggerMap.get(PGTrigger.availableTriggerId) ? (
-            <LogoNamePGCell
-              name={triggerMap.get(PGTrigger.availableTriggerId)?.[0] || ""}
-              image={triggerMap.get(PGTrigger.availableTriggerId)?.[1] || ""}
-            />
-          ) : (
-            <div className="text-center font-bold text-sm text-slate-600">
-              TRIGGER
+          <div className="flex justify-center py-4 px-3">
+            <PGCell
+              onClick={() => {
+                setType("trigger");
+                if (
+                  (triggerMap.get(PGTrigger.availableTriggerId) || false) &&
+                  true
+                ) {
+                  setOpenSideBar(true);
+                  setSelectedAvailableTA({
+                    id: PGTrigger.availableTriggerId,
+                    name:
+                      triggerMap.get(PGTrigger.availableTriggerId)?.[0] || "",
+                    image:
+                      triggerMap.get(PGTrigger.availableTriggerId)?.[1] || "",
+                  });
+                } else {
+                  setOpenModal(true);
+                }
+              }}
+              closeable={false}
+              isSelected={
+                (triggerMap.get(PGTrigger.availableTriggerId) || false) && true
+              }
+            >
+              {triggerMap.get(PGTrigger.availableTriggerId) ? (
+                <LogoNamePGCell
+                  name={triggerMap.get(PGTrigger.availableTriggerId)?.[0] || ""}
+                  image={
+                    triggerMap.get(PGTrigger.availableTriggerId)?.[1] || ""
+                  }
+                />
+              ) : (
+                <div className="text-center text-slate-500 font-semibold">
+                  Trigger
+                </div>
+              )}
+            </PGCell>
+          </div>
+
+          {PGActions.map((a, index) => (
+            <div key={index} className={`flex justify-center py-4 px-3`}>
+              <PGCell
+                onClick={() => {
+                  setType("action");
+                  setActionIndex(index);
+                  if ((actionMap.get(a.availableActionId) || false) && true) {
+                    setOpenSideBar(true);
+                    setSelectedAvailableTA({
+                      id: a.availableActionId,
+                      name: actionMap.get(a.availableActionId)?.[0] || "",
+                      image: actionMap.get(a.availableActionId)?.[1] || "",
+                    });
+                  } else {
+                    setOpenModal(true);
+                  }
+                }}
+                closeable={PGActions.length !== 1}
+                deleteActionOnClick={(e) => {
+                  setPGActions((prev) => {
+                    const newActions = [...prev];
+                    newActions.splice(index, 1);
+                    newActions.forEach((a, index) => {
+                      a.order = index;
+                    });
+                    return newActions;
+                  });
+                  setOpenSideBar(false);
+                  e.stopPropagation();
+                }}
+                isSelected={
+                  (actionMap.get(a.availableActionId) || false) && true
+                }
+              >
+                {actionMap.get(a.availableActionId) ? (
+                  <LogoNamePGCell
+                    name={actionMap.get(a.availableActionId)?.[0] || ""}
+                    image={actionMap.get(a.availableActionId)?.[1] || ""}
+                  />
+                ) : (
+                  <div className="text-center text-slate-500 font-semibold">
+                    Action
+                  </div>
+                )}
+              </PGCell>
             </div>
+          ))}
+
+          <div className="flex justify-center py-4 px-3">
+            <PrimaryButton
+              onClick={() => {
+                setPGActions((prev) => [
+                  ...prev,
+                  {
+                    availableActionId: "",
+                    order: prev.length,
+                  },
+                ]);
+              }}
+            >
+              <PlusIcon />
+            </PrimaryButton>
+          </div>
+          {openModal && (
+            <Modal
+              type={type}
+              onClose={() => setOpenModal(false)}
+              actionIndex={actionIndex}
+              availableTriggers={availableTriggers}
+              availableActions={availableActions}
+              setPGTrigger={setPGTrigger}
+              setPGActions={setPGActions}
+            />
           )}
-        </PGCell>
-      </div>
-
-      {PGActions.map((a, index) => (
-        <div key={index} className={`flex justify-center py-4 px-3`}>
-          <PGCell
-            onClick={() => {
-              setOpenModal(true);
-              setType("action");
-              setActionIndex(index);
-            }}
-            closeable={PGActions.length !== 1}
-            deleteActionOnClick={(e) => {
-              setPGActions((prev) => {
-                const newActions = [...prev];
-                newActions.splice(index, 1);
-                newActions.forEach((a, index) => {
-                  a.order = index;
-                });
-                return newActions;
-              });
-              e.stopPropagation();
-            }}
-          >
-            {actionMap.get(a.availableActionId) ? (
-              <LogoNamePGCell
-                name={actionMap.get(a.availableActionId)?.[0] || ""}
-                image={actionMap.get(a.availableActionId)?.[1] || ""}
-              />
-            ) : (
-              <div className="text-center font-bold text-sm text-slate-600">
-                ACTION
-              </div>
-            )}
-          </PGCell>
         </div>
-      ))}
 
-      <div className="flex justify-center py-4 px-3">
-        <PrimaryButton
-          onClick={() => {
-            setPGActions((prev) => [
-              ...prev,
-              {
-                availableActionId: "",
-                order: prev.length,
-              },
-            ]);
-          }}
-        >
-          <PlusIcon />
-        </PrimaryButton>
+        {openSideBar && (
+          <SideBar
+            selectedAvailableTA={selectedAvailableTA}
+            onClose={() => {
+              setOpenSideBar(false);
+            }}
+            type={type}
+            setPGTrigger={setPGTrigger}
+            setPGActions={setPGActions}
+            actionIndex={actionIndex}
+            PGTrigger={PGTrigger}
+            PGActions={PGActions}
+          />
+        )}
       </div>
-      {openModal && (
-        <Modal
-          type={type}
-          onClose={() => setOpenModal(false)}
-          actionIndex={actionIndex}
-          availableTriggers={availableTriggers}
-          availableActions={availableActions}
-          setPGTrigger={setPGTrigger}
-          setPGActions={setPGActions}
-        />
-      )}
     </div>
   );
 };
@@ -225,18 +280,5 @@ function PlusIcon() {
         d="M12 4.5v15m7.5-7.5h-15"
       />
     </svg>
-  );
-}
-
-function LogoNamePGCell({ name, image }: { name: string; image: string }) {
-  return (
-    <div className="flex">
-      <div className="w-[40px] flex items-center bg-[#fbddd2] rounded-lg border border-slate-400">
-        <div className="w-full flex justify-center h-1/2">
-          <img src={image} alt={name} className="w-3/5 rounded-full" />
-        </div>
-      </div>
-      <div className="ml-3">{name}</div>
-    </div>
   );
 }

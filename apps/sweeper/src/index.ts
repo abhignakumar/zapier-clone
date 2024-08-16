@@ -7,19 +7,25 @@ const kafka = new Kafka({
   clientId: "outbox-sweeper",
   brokers: ["localhost:9092"],
 });
+
 const producer = kafka.producer();
 
 async function main() {
   await producer.connect();
+
   console.log("Outbox Sweeper is running ...");
   while (1) {
     const pendingZapRuns = await prisma.zapRunOutBox.findMany({
       take: 10,
     });
 
+    console.log(pendingZapRuns);
+
     await producer.send({
       topic: KAFKA_TOPIC_NAME,
-      messages: pendingZapRuns.map((z) => ({ value: z.zapRunId })),
+      messages: pendingZapRuns.map((z) => ({
+        value: JSON.stringify({ zapRunId: z.zapRunId, stage: 0 }),
+      })),
     });
 
     await prisma.zapRunOutBox.deleteMany({

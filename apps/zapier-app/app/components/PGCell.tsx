@@ -5,22 +5,22 @@ export const PGCell = ({
   onClick,
   deleteActionOnClick,
   closeable,
+  isSelected,
 }: {
   children: React.ReactNode;
   onClick: () => void;
-  closeable: boolean;
   deleteActionOnClick?: (
     e: MouseEventReact<HTMLDivElement, MouseEvent>
   ) => void;
+  closeable: boolean;
+  isSelected: boolean;
 }) => {
   return (
     <div
-      className="relative border-2 border-slate-400 p-4 w-64 flex justify-center rounded-lg bg-zinc-200 cursor-pointer hover:bg-zinc-100 hover:shadow-md transition-all"
+      className={`relative border-2 border-slate-400 p-4 w-64 flex justify-center rounded-lg cursor-pointer hover:shadow-md transition-all ${isSelected ? "bg-zinc-200 hover:bg-zinc-100 border-solid" : "bg-zinc-100 hover:bg-zinc-50 border-dashed"}`}
       onClick={onClick}
     >
-      <div className="font-medium text-xl text-slate-700 w-full">
-        {children}
-      </div>
+      <div className="w-full">{children}</div>
       {closeable && (
         <div
           className="absolute top-[-10px] right-[-10px] text-red-600 bg-white rounded-full"

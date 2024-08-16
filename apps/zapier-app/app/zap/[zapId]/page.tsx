@@ -5,10 +5,14 @@ import { ZapPlayground } from "../../components/ZapPlayground";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "@repo/common/lib/config";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { LoadingSpinner } from "@repo/ui/LoadingSpinner";
+import { useSession } from "next-auth/react";
 
 export default function () {
+  const session = useSession();
+  const router = useRouter();
+
   const [trigger, setTrigger] = useState<Trigger>({
     availableTriggerId: "",
   });
@@ -37,6 +41,15 @@ export default function () {
       setLoading(false);
     });
   }, []);
+
+  if (session.status === "loading")
+    return (
+      <div className="flex justify-center p-10">
+        <LoadingSpinner />
+      </div>
+    );
+
+  if (session.status === "unauthenticated") router.push("/");
 
   return (
     <div>
