@@ -18,7 +18,7 @@ export const Navbar = () => {
             router.push("/");
           }}
         >
-          Zapier
+          ZapierClone
         </div>
         {session.status === "authenticated" && (
           <div className="ml-6">
