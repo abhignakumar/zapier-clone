@@ -1,5 +1,4 @@
-export const BACKEND_URL = "http://localhost:3000";
-export const WEBHOOK_URL = "http://localhost:3001";
+export const WEBHOOK_URL = "https://webhookzapierapp.abhigna.online";
 
 export const KAFKA_TOPIC_NAME = "zap-events";
 

@@ -4,7 +4,6 @@ import { Action, Trigger } from "@repo/common/types/types";
 import { ZapPlayground } from "../../components/ZapPlayground";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { BACKEND_URL } from "@repo/common/lib/config";
 import { useParams, useRouter } from "next/navigation";
 import { LoadingSpinner } from "@repo/ui/LoadingSpinner";
 import { useSession } from "next-auth/react";
@@ -26,7 +25,7 @@ export default function () {
   const { zapId } = useParams();
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/api/zap/${zapId}`).then((response) => {
+    axios.get(`/api/zap/${zapId}`).then((response) => {
       setTrigger({
         availableTriggerId: response.data.trigger.availableTriggerId,
         metaData: response.data.trigger.metaData,

@@ -19,7 +19,7 @@ export const authOptions = {
           type: "password",
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const userCredentials = {
           email: credentials?.email,
           password: credentials?.password,

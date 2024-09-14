@@ -1,6 +1,5 @@
 "use client";
 
-import { BACKEND_URL } from "@repo/common/lib/config";
 import { LoadingSpinner } from "@repo/ui/LoadingSpinner";
 import axios from "axios";
 import { useParams } from "next/navigation";
@@ -12,7 +11,7 @@ export const TriggerWebhook = () => {
   const { zapId } = useParams();
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/api/webhook?zapId=${zapId}`).then((response) => {
+    axios.get(`/api/webhook?zapId=${zapId}`).then((response) => {
       setWebhookURL(response.data.webhookURL);
       setLoading(false);
     });

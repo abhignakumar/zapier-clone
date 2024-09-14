@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
   });
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user)
     return NextResponse.json({ msg: "User not logged in" }, { status: 401 });

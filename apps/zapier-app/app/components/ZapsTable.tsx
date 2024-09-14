@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { AllZaps } from "@repo/common/types/types";
 import axios from "axios";
-import { BACKEND_URL } from "@repo/common/lib/config";
 import { LinkButton } from "@repo/ui/LinkButton";
 import { useRouter } from "next/navigation";
 import { LoadingSpinner } from "@repo/ui/LoadingSpinner";
@@ -13,7 +12,7 @@ function useZaps() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/api/zap`).then((response) => {
+    axios.get(`/api/zap`).then((response) => {
       setZaps(response.data);
       setLoading(false);
     });

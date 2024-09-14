@@ -5,7 +5,6 @@ import { PGCell } from "./PGCell";
 import { PrimaryButton } from "@repo/ui/PrimaryButton";
 import { Action, AvailableTA, Trigger } from "@repo/common/types/types";
 import axios from "axios";
-import { BACKEND_URL } from "@repo/common/lib/config";
 import { Modal } from "./Modal";
 import { createZapSchema, updateZapSchema } from "@repo/common/types/zodTypes";
 import { useParams, useRouter } from "next/navigation";
@@ -43,7 +42,7 @@ export const ZapPlayground = ({
 
   useEffect(() => {
     async function fetchData() {
-      const response1 = await axios.get(`${BACKEND_URL}/api/availableTriggers`);
+      const response1 = await axios.get(`/api/availableTriggers`);
       setAvailableTriggers(response1.data.availableTriggers);
       response1.data.availableTriggers.forEach((t: AvailableTA) => {
         setTriggerMap((prev) => {
@@ -51,7 +50,7 @@ export const ZapPlayground = ({
           return prev;
         });
       });
-      const response2 = await axios.get(`${BACKEND_URL}/api/availableActions`);
+      const response2 = await axios.get(`/api/availableActions`);
       setAvailableActions(response2.data.availableActions);
       response2.data.availableActions.forEach((a: AvailableTA) => {
         setActionMap((prev) => {
@@ -80,7 +79,7 @@ export const ZapPlayground = ({
         alert("Inputs are not valid");
         return;
       }
-      axios.post(`${BACKEND_URL}/api/zap`, parsedData.data).then((response) => {
+      axios.post(`/api/zap`, parsedData.data).then((response) => {
         if (response.status === 200) {
           alert("Zap created");
           router.push("/dashboard");
@@ -103,15 +102,13 @@ export const ZapPlayground = ({
         alert("Inputs are not valid");
         return;
       }
-      axios
-        .post(`${BACKEND_URL}/api/zap/${zapId}`, parsedData.data)
-        .then((response) => {
-          if (response.status === 200) {
-            alert("Zap updated");
-            router.push("/dashboard");
-          } else alert(response.data.msg);
-          return;
-        });
+      axios.post(`/api/zap/${zapId}`, parsedData.data).then((response) => {
+        if (response.status === 200) {
+          alert("Zap updated");
+          router.push("/dashboard");
+        } else alert(response.data.msg);
+        return;
+      });
     }
   }
 
